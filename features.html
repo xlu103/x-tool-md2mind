@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>jsMind</title>
+        <link
+            type="text/css"
+            rel="stylesheet"
+            href="//cdn.jsdelivr.net/npm/jsmind@0.8.6/style/jsmind.css"
+        />
+        <style type="text/css">
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: #f0f0f0;
+                color: #333;
+                transition: background-color 0.3s ease, color 0.3s ease;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 100vh;
+            }
+
+            #layout {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                height: 100%;
+                padding: 20px;
+                box-sizing: border-box;
+                gap: 20px;
+            }
+
+            #jsmind_nav {
+                width: 220px;
+                padding: 20px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                background-color: #fff;
+            }
+
+            #markdown_input {
+                flex: 1;
+                border: 1px solid #e0e0e0;
+                border-radius: 4px;
+                padding: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                background-color: #ffffff;
+            }
+
+            #markdown_input h2 {
+                margin: 0 0 10px;
+            }
+
+            #jsmind_container {
+                flex-grow: 2;
+                border-radius: 8px;
+                overflow: hidden;
+                transition: box-shadow 0.3s ease;
+                background-color: #ffffff;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            #jsmind_container:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            #jsmind_container {
+                animation: fadeIn 0.5s ease;
+            }
+
+            .nav-title {
+                margin: 10px 0;
+                font-size: 1.2em;
+                color: #007bff;
+            }
+
+            .nav-button {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 10px 15px;
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+                margin: 5px 0;
+                width: 100%;
+            }
+
+            .nav-button:hover {
+                background-color: #0056b3;
+                transform: translateY(-2px);
+            }
+
+            .theme-dropdown {
+                width: 100%;
+                padding: 5px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                transition: border-color 0.3s ease;
+            }
+
+            .theme-dropdown:focus {
+                border-color: #007bff;
+                outline: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="layout">
+            <div id="jsmind_nav" class="nav-container">
+                <h2 class="nav-title">操作</h2>
+                <div class="nav-actions">
+                    <button class="nav-button" onclick="open_json();">打开示例</button>
+                    <button class="nav-button" onclick="screen_shot();">截图</button>
+                </div>
+                <h2 class="nav-title">主题选择</h2>
+                <div class="theme-selector">
+                    <select onchange="set_theme(this.value);" class="theme-dropdown">
+                        <option value="">默认</option>
+                        <option value="primary">主要</option>
+                        <option value="warning">警告</option>
+                        <option value="danger">危险</option>
+                        <option value="success">成功</option>
+                        <option value="info">信息</option>
+                        <option value="greensea" selected="selected">绿海</option>
+                        <option value="nephrite">翡翠</option>
+                        <option value="belizehole">伯利兹洞</option>
+                        <option value="wisteria">紫藤</option>
+                        <option value="asphalt">沥青</option>
+                        <option value="orange">橙色</option>
+                        <option value="pumpkin">南瓜</option>
+                        <option value="pomegranate">石榴</option>
+                        <option value="clouds">云彩</option>
+                        <option value="asbestos">石棉</option>
+                    </select>
+                </div>
+                <h2 class="nav-title">背景设置</h2>
+                <div class="background-settings">
+                    <button class="nav-button" onclick="toggle_background_color();">切换背景颜色</button>
+                </div>
+                
+            </div>
+            <div id="markdown_input">
+                <h2 class="nav-title">Markdown 输入</h2>
+                <div style="width: 95%; border: 1px solid #e0e0e0; border-radius: 4px; padding: 10px; overflow: auto; max-height: 300px; margin: 10px;">
+                    <div contenteditable="true" placeholder="" style="min-height: 150px; outline: none; padding: 10px;"></div>
+                </div>
+            <div class="conversion-settings">
+                <button class="nav-button" onclick="md2jm(document.querySelector('#markdown_input div[contenteditable]').innerText);">转换 Markdown</button>
+            </div>
+            </div>
+
+            <div id="jsmind_container"></div>
+            <div style="display: none">
+                <input class="file" type="file" id="image-chooser" accept="image/*" />
+            </div>
+        </div>
+        <script
+            type="text/javascript"
+            src="//cdn.jsdelivr.net/npm/jsmind@0.8.6/es6/jsmind.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="//cdn.jsdelivr.net/npm/jsmind@0.8.6/es6/jsmind.draggable-node.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="//cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="//cdn.jsdelivr.net/npm/jsmind@0.8.6/es6/jsmind.screenshot.js"
+        ></script>
+        <script type="text/javascript" src="features.js"></script>
+    </body>
+</html>
