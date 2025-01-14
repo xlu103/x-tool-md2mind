@@ -125,30 +125,16 @@
                     <button class="nav-button" onclick="open_json();">打开示例</button>
                     <button class="nav-button" onclick="screen_shot();">截图</button>
                 </div>
-                <h2 class="nav-title">主题选择</h2>
-                <div class="theme-selector">
-                    <select onchange="set_theme(this.value);" class="theme-dropdown">
-                        <option value="">默认</option>
-                        <option value="primary">主要</option>
-                        <option value="warning">警告</option>
-                        <option value="danger">危险</option>
-                        <option value="success">成功</option>
-                        <option value="info">信息</option>
-                        <option value="greensea" selected="selected">绿海</option>
-                        <option value="nephrite">翡翠</option>
-                        <option value="belizehole">伯利兹洞</option>
-                        <option value="wisteria">紫藤</option>
-                        <option value="asphalt">沥青</option>
-                        <option value="orange">橙色</option>
-                        <option value="pumpkin">南瓜</option>
-                        <option value="pomegranate">石榴</option>
-                        <option value="clouds">云彩</option>
-                        <option value="asbestos">石棉</option>
-                    </select>
-                </div>
+     
                 <h2 class="nav-title">背景设置</h2>
                 <div class="background-settings">
                     <button class="nav-button" onclick="toggle_background_color();">切换背景颜色</button>
+                    <select id="background-selector" class="theme-dropdown" style="background-color: #f0f0f0; border: 1px solid #007bff; border-radius: 4px; padding: 5px; font-size: 1em; color: #333;">
+                        <option value="linear-gradient(to top, rgba(161, 140, 209, 0.6) 0%, rgba(251, 194, 235, 0.6) 60%)">渐变色1</option>
+                        <option value="linear-gradient(to top, rgba(255, 154, 158, 0.6) 0%, rgba(254, 207, 239, 0.6) 60%, rgba(254, 207, 239, 0.6) 100%)">渐变色2</option>
+                        <option value="linear-gradient(120deg, rgba(166, 192, 254, 0.6) 0%, rgba(246, 128, 132, 0.6) 60%, rgba(246, 128, 132, 0.6) 100%)">渐变色3</option>
+                        <option value="linear-gradient(120deg, rgba(252, 203, 144, 0.6) 0%, rgba(213, 126, 235, 0.6) 60%, rgba(213, 126, 235, 0.6) 100%)">渐变色4</option>
+                    </select>
                 </div>
                 
             </div>

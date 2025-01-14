@@ -1,4 +1,5 @@
 var _jm = null;
+
 function open_empty() {
   var options = {
     container: "jsmind_container",
@@ -12,7 +13,7 @@ function open_empty() {
     },
     plugin: {
       screenshot: {
-        background: "#ffffff",
+        background: "#333333",
       },
     },
   };
@@ -21,7 +22,7 @@ function open_empty() {
 }
 
 function open_json() {
-    var markdownExample = `    # 费曼学习法
+  var markdownExample = `    # 费曼学习法
     ## 1. 理解
     ### 1.1 选择一个主题
     ### 1.2 研究和学习
@@ -32,10 +33,10 @@ function open_json() {
     ### 3.1 定期回顾
     ### 3.2 深入理解
     `;
-    document.querySelector(
-        "#markdown_input div[contenteditable]"
-      ).innerText=markdownExample;
-      md2jm();
+  document.querySelector(
+    "#markdown_input div[contenteditable]"
+  ).innerText = markdownExample;
+  md2jm();
 }
 
 function convertMarkdownToJsMind(markdown) {
@@ -136,7 +137,6 @@ function md2jm() {
   _jm.show(mind);
 }
 
-
 function screen_shot() {
   _jm.shoot();
 }
@@ -211,16 +211,12 @@ imageChooser.addEventListener(
   false
 );
 
- 
-
 function set_theme(theme_name) {
   _jm.set_theme(theme_name);
 }
 
 var zoomInButton = document.getElementById("zoom-in-button");
 var zoomOutButton = document.getElementById("zoom-out-button");
-
- 
 
 function toggle_editable(btn) {
   var editable = _jm.get_editable();
@@ -233,15 +229,10 @@ function toggle_editable(btn) {
   }
 }
 
-
-
 function resize_jsmind() {
   _jm.resize();
 }
 
- 
-
-  
 function expand_all() {
   _jm.expand_all();
 }
@@ -338,28 +329,19 @@ function prompt_info(msg) {
 
 open_empty();
 open_json();
-toggle_background_color();
-function toggle_background_color() {
-  const body = document.body;
-  const jsmindElement = document.querySelector(".jsmind");
-  // markdown_input
-  const markdown_input = document.querySelector("#markdown_input");
-  // jsmind_nav
-  const jsmind_nav = document.querySelector("#jsmind_nav");
-  const isBlackBackground = body.style.backgroundColor === "black";
+toggle_background_color("linear-gradient(120deg, rgba(252, 203, 144, 0.6) 0%, rgba(213, 126, 235, 0.6) 60%, rgba(213, 126, 235, 0.6) 100%)");
 
-  // 切换背景颜色和文本颜色
-  body.style.backgroundColor = isBlackBackground ? "white" : "black";
-  body.style.color = isBlackBackground ? "black" : "white";
-  jsmindElement.style.backgroundColor = isBlackBackground ? "#f4f4f4" : "#333";
-  markdown_input.style.backgroundColor = isBlackBackground ? "#f4f4f4" : "#333";
-  jsmind_nav.style.backgroundColor = isBlackBackground ? "#f4f4f4" : "#333";
-  // 更新其他页面元素的颜色
-  const allElements = document.querySelectorAll("h1, h2, h3, p, button, input, textarea");
-  allElements.forEach((element) => {
-    element.style.color = isBlackBackground ? "black" : "white"; // 更新文本颜色
-    if (element.tagName === "BUTTON") {
-      element.style.backgroundColor = isBlackBackground ? "#f0f0f0" : "#555"; // 更新按钮背景颜色
-    }
-  });
+function toggle_background_color(selectedColor) {
+
+  const theme_greensea = document.querySelector(".theme-greensea");
+ 
+
+  theme_greensea.style.backgroundImage = selectedColor;
+ 
 }
+
+// 处理背景颜色选择
+document.getElementById("background-selector").addEventListener("change", function() {
+  const selectedColor = this.value;
+  toggle_background_color(selectedColor); // 调用切换背景颜色的函数
+});
