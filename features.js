@@ -42,18 +42,17 @@ function convertMarkdownToJsMind(markdown) {
   const mind = {
     meta: {
       name: "Markdown 转换",
-      author: "hizzgdev@163.com",
+      author: "",
       version: "0.3", // 更新版本号
     },
     format: "node_tree",
     data: {
       id: "root",
-      topic: "Markdown 转换",
+      topic: "", // 第一级标题将被设置在这里
       children: [],
     },
   };
-  let currentLevelNodes = [mind.data]; // 当前层级节点
-  const colors = ["#1e90ff", "#ff1493", "#8a2be2", "#ffd700", "#32cd32"]; // 更新每个二级分支的颜色
+
   markdown.forEach((line) => {
     const level = line.split("#").length - 1; // 计算当前行的层级
     const topic = line.trim().replace(/^#+\s*/, ""); // 提取主题
@@ -61,29 +60,53 @@ function convertMarkdownToJsMind(markdown) {
     if (topic.length === 0) {
       return; // 跳过空主题
     }
-    const newNode = {
+
+    // 创建节点的函数
+    const createNode = (topic) => ({
       id: jsMind.util.uuid.newid(), // 使用随机生成的ID
       topic: topic,
-      direction: level % 2 === 0 ? "right" : "left", // 根据层级决定方向
+      direction: level === 2 ? "right" : "left", // 二级标题方向统一,其他层级方向为左
       children: [],
-      "background-color": level === 1 ? "rgba(30, 144, 255, 0.7)" : (level === 2 ? "rgba(255, 20, 147, 0.7)" : (level === 3 ? "rgba(138, 43, 226, 0.7)" : (level === 4 ? "rgba(255, 215, 0, 0.7)" : "rgba(50, 205, 50, 0.7)"))), // 根据层级设置透明背景颜色
+      "background-color": "rgba(30, 144, 255, 0.7)", // 设置透明背景颜色
       "foreground-color": "#fff", // 更改前景颜色为白色
       "font-size": "22px", // 设置字体大小为22px
       "font-weight": "bold", // 设置字体为加粗
       "border": "2px solid #ff1493", // 更新边框颜色
       "border-radius": "8px", // 设置圆角
       "padding": "5px", // 添加内边距
-    //   "font-weight": "bold", // 设置字体为加粗
-      "border": "2px solid #ff1493", // 更新边框颜色
-      "border-radius": "5px", // 设置圆角
-    };
-    // 确保节点添加到正确的层级
-    if (level === 0) {
-      mind.data.children.push(newNode); // 添加到根节点
-      currentLevelNodes = [newNode]; // 更新当前层级节点
-    } else {
-      currentLevelNodes[level - 1].children.push(newNode); // 添加到当前层级的父节点
-      currentLevelNodes[level] = newNode; // 更新当前层级节点
+    });
+
+    if (level === 1) {
+      mind.data.topic = topic; // 将第一级标题设置为data.topic
+    } else if (level === 2) { // 处理二级标题
+      let currentLevel = mind.data; // 从根节点开始
+      const newNode = createNode(topic);
+      currentLevel.children.push(newNode); // 添加到当前层级的children
+      currentLevel = newNode; // 更新currentLevel为新创建的节点
+    } else if (level === 3) { // 处理三级标题
+      let currentLevel = mind.data.children[mind.data.children.length - 1]; // 从最后一个二级节点开始
+      const newNode = createNode(topic);
+      if (!currentLevel.children) {
+        currentLevel.children = [];
+      }
+      currentLevel.children.push(newNode); // 添加到当前层级的children
+    } else if (level > 3) { // 处理四级及以上标题
+      let currentLevel = mind.data.children[mind.data.children.length - 1].children[mind.data.children[mind.data.children.length - 1].children.length - 1]; // 从最后一个三级节点开始
+      for (let i = 4; i <= level; i++) {
+        // 如果当前层级的children不存在,则初始化为一个空数组
+        if (!currentLevel.children) {
+          currentLevel.children = [];
+        }
+        // 查找当前层级的节点
+        let existingNode = currentLevel.children.find(child => child.topic === topic);
+        if (!existingNode) {
+          const newNode = createNode(topic);
+          currentLevel.children.push(newNode); // 添加到当前层级的children
+          currentLevel = newNode; // 更新currentLevel为新创建的节点
+        } else {
+          currentLevel = existingNode; // 更新currentLevel为已存在的节点
+        }
+      }
     }
   });
   return mind;
@@ -293,7 +316,7 @@ function open_freemind() {
         var mind = {
           meta: {
             name: mind_name,
-            author: "hizzgdev@163.com",
+            author: "",
             version: "1.0.1",
           },
           format: "freemind",
@@ -340,5 +363,3 @@ function toggle_background_color() {
     }
   });
 }
-
-
